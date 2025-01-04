@@ -1,0 +1,9 @@
+Funcție: addIntegers (return int)
+ - Parametri: 2
+--------------
+Funcție: divideIntegers (return float)
+ - Parametri: 2
+--------------
+Funcție: main (return int)
+ - Parametri: 0
+--------------

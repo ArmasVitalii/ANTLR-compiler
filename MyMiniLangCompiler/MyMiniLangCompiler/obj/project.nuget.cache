@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "U1fWvRyrLtTr1ZofWLf/v2Kxet1Q/gREWQPkIugJ8b+bmPqhOA2ndLWaLeLHngHzw171YQ61Vh+GZF74btcjQw==",
+  "success": true,
+  "projectFilePath": "F:\\UniTBv\\LFC\\RepoCommpilator\\MyMiniLangCompiler\\MyMiniLangCompiler\\MyMiniLangCompiler.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\XBulet\\.nuget\\packages\\antlr4.runtime.standard\\4.13.1\\antlr4.runtime.standard.4.13.1.nupkg.sha512"
+  ],
+  "logs": []
+}

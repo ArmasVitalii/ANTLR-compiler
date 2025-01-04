@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MyMiniLangCompiler": {
+      "commandName": "Project",
+      "commandLineArgs": "test.mini"
+    }
+  }
+}

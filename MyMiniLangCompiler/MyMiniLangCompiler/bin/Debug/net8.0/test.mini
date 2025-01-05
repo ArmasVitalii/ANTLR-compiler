@@ -2,6 +2,10 @@
 {
  return first + second;
 }
+struct floare{
+    int id;
+}
+int number = "some text";
 float divideIntegers(int first, int second)
 {
  if (second == 0)

@@ -1,11 +1,21 @@
 grammar MiniLang;
 
-// ====================================================== 1. PARSER RULES
+// ====================================================== PARSER RULES
 // ======================================================
-program: (globalVarDecl | functionDecl)* EOF;
 
+program: (structDecl | globalVarDecl | functionDecl)* EOF;
+
+/* 1) DEFINIRE STRUCT */
+structDecl: KEYWORD_STRUCT ID LBRACE structBody RBRACE;
+
+structBody: (structFieldDecl | functionDecl)*; // câmpuri și funcții
+
+structFieldDecl: type ID SEMI; // ex: int x;
+
+/* 2) VARIABILE GLOBALE */
 globalVarDecl: type ID (ASSIGN expression)? SEMI;
 
+/* 3) DECLARAȚII DE FUNCȚII */
 functionDecl: type ID LPAREN paramList? RPAREN block;
 
 paramList: paramDecl (COMMA paramDecl)*;
@@ -14,6 +24,7 @@ paramDecl: type ID;
 
 block: LBRACE (statement | globalVarDecl)* RBRACE;
 
+/* 4) INSTRUCȚIUNI */
 statement:
 	ifStatement
 	| forStatement
@@ -28,12 +39,13 @@ ifStatement:
 		KEYWORD_ELSE statement
 	)?;
 
-forStatement:
-	KEYWORD_FOR LPAREN (localVarDecl | assignment)? SEMI expression? SEMI (
+forStatement: // Permitem fie assignment/localVarDecl înainte de primul ';', fie nimic
+	KEYWORD_FOR LPAREN (assignment | localVarDecl)? SEMI expression? SEMI (
 		assignment
 		| expression
 	)? RPAREN statement;
 
+// localVarDecl folosit doar în for: (ex: int i = 0)
 localVarDecl: type ID ASSIGN expression;
 
 whileStatement:
@@ -51,6 +63,7 @@ assignment:
 		| MOD_ASSIGN
 	) expression SEMI;
 
+/* 5) EXPR */
 expression: logicalOrExpr;
 
 logicalOrExpr: logicalAndExpr (OR logicalAndExpr)*;
@@ -68,9 +81,10 @@ additiveExpr:
 
 multiplicativeExpr: unaryExpr ((STAR | DIV | MOD) unaryExpr)*;
 
-unaryExpr: (INC | DEC)? primaryExpr // prefix
-	| primaryExpr (INC | DEC)? ; // postfix
+// Permitem inc/dec prefix/postfix
+unaryExpr: (INC | DEC)? primaryExpr | primaryExpr (INC | DEC)?;
 
+/* Apel de funcție cu argumente multiple */
 primaryExpr:
 	functionCall
 	| NUM
@@ -82,6 +96,7 @@ functionCall: ID LPAREN argumentList? RPAREN;
 
 argumentList: expression (COMMA expression)*;
 
+/* 6) TIPURI */
 type:
 	KEYWORD_INT
 	| KEYWORD_FLOAT
@@ -89,8 +104,9 @@ type:
 	| KEYWORD_STRING
 	| KEYWORD_VOID;
 
-// ====================================================== 2. LEXER RULES
+// ====================================================== LEXER RULES
 // ======================================================
+KEYWORD_STRUCT: 'struct';
 KEYWORD_INT: 'int';
 KEYWORD_FLOAT: 'float';
 KEYWORD_DOUBLE: 'double';
@@ -135,18 +151,15 @@ RBRACE: '}';
 SEMI: ';';
 COMMA: ',';
 
-// Identificatori (variabile, funcții):
 ID: [a-zA-Z_][a-zA-Z0-9_]*;
 
+/* suport minimal float/double */
 NUM: [0-9]+ ('.' [0-9]+)?;
 
 STRING_LITERAL: '"' (~["\r\n] | ('\\' .))* '"';
 
-// Ignorăm spațiile albe
 WS: [ \t\r\n]+ -> skip;
 
-// Comentarii linie // ...
 LINE_COMMENT: '//' ~[\r\n]* -> skip;
 
-// Comentarii bloc /* ... */
 BLOCK_COMMENT: '/*' .*? '*/' -> skip;

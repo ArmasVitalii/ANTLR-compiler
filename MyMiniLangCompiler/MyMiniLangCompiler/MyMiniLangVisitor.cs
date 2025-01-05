@@ -155,6 +155,14 @@ namespace MyMiniLangCompiler
                 }
             }
         }
+        public override object VisitStructDecl([NotNull] MiniLangParser.StructDeclContext context)
+        {
+            string structName = context.ID().GetText();
+            Console.WriteLine("Am găsit struct: " + structName);
+
+            // ... colectați info, ex. cîmpuri, funcții ...
+            return base.VisitStructDecl(context);
+        }
     }
 
     // Clasă ajutătoare pentru parametrii unei funcții

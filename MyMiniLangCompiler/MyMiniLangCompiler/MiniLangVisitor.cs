@@ -38,6 +38,24 @@ public interface IMiniLangVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitProgram([NotNull] MiniLangParser.ProgramContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="MiniLangParser.structDecl"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitStructDecl([NotNull] MiniLangParser.StructDeclContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MiniLangParser.structBody"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitStructBody([NotNull] MiniLangParser.StructBodyContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="MiniLangParser.structFieldDecl"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitStructFieldDecl([NotNull] MiniLangParser.StructFieldDeclContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="MiniLangParser.globalVarDecl"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

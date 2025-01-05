@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MyMiniLangCompiler")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6c6d015da4e7606d6a6446596f33fa157b377a53")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fa23970388d60c38ee60818391f87d9cd6bed384")]
 [assembly: System.Reflection.AssemblyProductAttribute("MyMiniLangCompiler")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MyMiniLangCompiler")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,6 +1,6 @@
 ﻿using Antlr4.Runtime;
 using System;
-using System.IO;  // ATENȚIE: este necesar pentru TextWriter
+using System.IO;  
 
 public class MiniLangErrorListener : BaseErrorListener
 {

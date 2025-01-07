@@ -8,15 +8,12 @@ namespace MyMiniLangCompiler
 {
     public class MyMiniLangVisitor : MiniLangBaseVisitor<object>
     {
-        // A. Lista de tokeni colectați (pentru cerința: salvare <token, lexemă, nr. linie>)
         private readonly List<(string TokenType, string Lexeme, int Line)> _tokens
             = new List<(string TokenType, string Lexeme, int Line)>();
 
-        // B. Variabile globale: nume -> (tip, valoare_inicializare)
         private Dictionary<string, (string type, string? initValue)> _globalVars
             = new Dictionary<string, (string type, string? initValue)>();
 
-        // C. Informații despre funcții
         private List<FunctionInfo> _functions
             = new List<FunctionInfo>();
 
@@ -28,7 +25,6 @@ namespace MyMiniLangCompiler
             string lexeme = symbol.Text;
             int line = symbol.Line;
 
-            // Ignorăm anumite token-uri de tip whitespace/comentariu
             if (tokenName != "WS" && tokenName != "LINE_COMMENT" && tokenName != "BLOCK_COMMENT")
             {
                 _tokens.Add((tokenName, lexeme, line));
@@ -49,19 +45,16 @@ namespace MyMiniLangCompiler
                 initValue = context.expression().GetText();
             }
 
-            // Verificare semantică: variabila globală există deja?
             if (_globalVars.ContainsKey(varName))
             {
                 Console.WriteLine($"[Eroare semantica] Variabila globală '{varName}' este deja declarată.");
             }
             else
             {
-                // Exemplu simplificat de verificare a compatibilității tipului:
                 if (varType == "int" && initValue != null && initValue.StartsWith("\""))
                 {
                     Console.WriteLine($"[Eroare semantica] Variabila '{varName}' (int) nu poate primi un string.");
                 }
-                // Puteți extinde această logică pentru float/double etc.
 
                 _globalVars[varName] = (varType, initValue);
             }
@@ -75,7 +68,6 @@ namespace MyMiniLangCompiler
             string returnType = context.type().GetText();
             string funcName = context.ID().GetText();
 
-            // Colectăm parametrii
             List<ParameterInfo> parameters = new List<ParameterInfo>();
             if (context.paramList() != null)
             {
@@ -87,7 +79,6 @@ namespace MyMiniLangCompiler
                 }
             }
 
-            // Verificare semantica: unicitatea funcțiilor (nume + semnătură)
             foreach (var existingFunc in _functions)
             {
                 if (existingFunc.FuncName == funcName && existingFunc.HasSameParameters(parameters))
@@ -96,7 +87,6 @@ namespace MyMiniLangCompiler
                 }
             }
 
-            // Creăm obiectul care descrie funcția
             var funcInfo = new FunctionInfo
             {
                 FuncName = funcName,
@@ -104,18 +94,13 @@ namespace MyMiniLangCompiler
                 Parameters = parameters
             };
 
-            // Vizităm corpul funcției (block) pentru a colecta eventualele variabile locale, structuri, etc.
-            // => Apelăm visit ca să intre și în block
             var result = base.VisitFunctionDecl(context);
 
-            // Adăugăm funcția în lista noastră
             _functions.Add(funcInfo);
 
             return result;
         }
 
-        // EXEMPLED: Aici puteți suprascrie vizitarea block-ului, ifStatement, forStatement etc.
-        //           pentru a colecta structuri de control (de ex. <if, nr. linie>).
 
         // ================== 4. Metode de scriere în fișiere ==================
         public void PrintTokens(string fileName)
@@ -148,7 +133,6 @@ namespace MyMiniLangCompiler
             {
                 foreach (var f in _functions)
                 {
-                    // Simplu exemplu de afișare
                     writer.WriteLine($"Funcție: {f.FuncName} (return {f.ReturnType})");
                     writer.WriteLine($" - Parametri: {f.Parameters.Count}");
                     writer.WriteLine("--------------");
@@ -160,19 +144,16 @@ namespace MyMiniLangCompiler
             string structName = context.ID().GetText();
             Console.WriteLine("Am găsit struct: " + structName);
 
-            // ... colectați info, ex. cîmpuri, funcții ...
             return base.VisitStructDecl(context);
         }
     }
 
-    // Clasă ajutătoare pentru parametrii unei funcții
     public class ParameterInfo
     {
         public string ParamName { get; set; } = "";
         public string ParamType { get; set; } = "";
     }
 
-    // Clasă ajutătoare pentru descrierea unei funcții
     public class FunctionInfo
     {
         public string FuncName { get; set; } = "";
@@ -184,7 +165,6 @@ namespace MyMiniLangCompiler
             if (Parameters.Count != otherParams.Count) return false;
             for (int i = 0; i < Parameters.Count; i++)
             {
-                // Comparam tipurile parametrelor (pentru a determina "semnătura")
                 if (Parameters[i].ParamType != otherParams[i].ParamType)
                     return false;
             }
